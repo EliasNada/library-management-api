@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, Enum, text
-from app.database.database import Base
+from core.database.database import Base
 
 class BorrowingHistory(Base):
     __tablename__ = 'borrowing_history'

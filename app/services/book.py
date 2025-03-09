@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
-from app.database.tables.book import Book
-from app.schemas.book import BookCreate, BookResponse
+from core.database.tables import Book
+from app.models.book import BookCreate
 
 class BookService:
     @staticmethod
     def create_book(db: Session, book: BookCreate):
-        db_book = Book(**book.dict())
+        db_book = Book(**book.model_dump())
         db.add(db_book)
         db.commit()
         db.refresh(db_book)
@@ -23,7 +23,7 @@ class BookService:
     def update_book(db: Session, book_id: int, book: BookCreate):
         db_book = db.query(Book).filter(Book.book_id == book_id).first()
         if db_book:
-            for key, value in book.dict().items():
+            for key, value in book.model_dump().items():
                 setattr(db_book, key, value)
             db.commit()
             db.refresh(db_book)

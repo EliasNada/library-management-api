@@ -1,9 +1,9 @@
 import secrets
 
 from sqlalchemy.orm import Session
-from app.database.tables.user import User
-from app.schemas.user import UserCreate, UserResponse
-from app.auth.utils import get_hash, verify_hash
+from core.database.tables import User
+from app.models.user import UserCreate
+from core.auth.hashing import get_hash, verify_hash
 
 class UserService:
 
@@ -42,7 +42,6 @@ class UserService:
     def get_user_by_api_key(db: Session, api_key: str):
         api_key_prefix = api_key[:10]
         user = db.query(User).filter(User.api_key_prefix == api_key_prefix).first()
-        print(user.api_key, api_key)
         if user and verify_hash(api_key, user.api_key):
             return user
         return None

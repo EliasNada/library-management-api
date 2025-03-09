@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from app.database.tables.borrowing_history import BorrowingHistory
-from app.schemas.borrowing_history import BorrowingHistoryCreate, BorrowingHistoryResponse
+from core.database.tables import BorrowingHistory
+from app.models.borrowing_history import BorrowingHistoryCreate
+
 
 class BorrowingHistoryService:
     @staticmethod

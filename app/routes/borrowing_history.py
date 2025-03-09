@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database.database import get_db
-from app.schemas.borrowing_history import BorrowingHistoryCreate, BorrowingHistoryResponse
+from core.database.database import get_db
+from app.models.borrowing_history import BorrowingHistoryCreate, BorrowingHistoryResponse
 from app.services.borrowing_history import BorrowingHistoryService
 
 router = APIRouter()

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from app.database.tables.category import Category
-from app.schemas.category import CategoryCreate, CategoryResponse
+from core.database.tables import Category
+from app.models.category import CategoryCreate
+
 
 class CategoryService:
     @staticmethod
