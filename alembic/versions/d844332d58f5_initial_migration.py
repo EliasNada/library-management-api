@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 8eab6402b688
+Revision ID: d844332d58f5
 Revises: 
-Create Date: 2025-03-09 17:34:51.185387
+Create Date: 2025-03-10 00:00:30.246167
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8eab6402b688'
+revision: str = 'd844332d58f5'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -35,9 +35,13 @@ def upgrade() -> None:
     sa.Column('password', sa.String(length=255), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('role', sa.Enum('user', 'librarian', name='user_roles'), nullable=True),
+    sa.Column('api_key', sa.String(length=255), nullable=True),
+    sa.Column('api_key_prefix', sa.String(length=10), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.PrimaryKeyConstraint('user_id'),
+    sa.UniqueConstraint('api_key'),
+    sa.UniqueConstraint('api_key_prefix'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )

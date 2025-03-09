@@ -1,19 +1,57 @@
+import secrets
+
 from sqlalchemy.orm import Session
 from app.database.tables.user import User
 from app.schemas.user import UserCreate, UserResponse
+from app.auth.utils import get_hash, verify_hash
 
 class UserService:
+
+    @staticmethod
+    def generate_api_key():
+        return secrets.token_urlsafe(32)
+
     @staticmethod
     def create_user(db: Session, user: UserCreate):
-        db_user = User(**user.dict())
+        hashed_password = get_hash(user.password)
+        api_key = UserService.generate_api_key()
+        hashed_api_key = get_hash(api_key)
+        api_key_prefix = api_key[:10]
+        db_user = User(
+            username=user.username,
+            password=hashed_password,
+            email=user.email,
+            role=user.role,
+            api_key=hashed_api_key,
+            api_key_prefix=api_key_prefix,
+        )
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-        return db_user
+        return db_user, api_key
 
     @staticmethod
     def get_user(db: Session, user_id: int):
         return db.query(User).filter(User.user_id == user_id).first()
+
+    @staticmethod
+    def get_user_by_username(db: Session, username: str):
+        return db.query(User).filter(User.username == username).first()
+
+    @staticmethod
+    def get_user_by_api_key(db: Session, api_key: str):
+        api_key_prefix = api_key[:10]
+        user = db.query(User).filter(User.api_key_prefix == api_key_prefix).first()
+        if user and verify_hash(api_key, user.api_key):
+            return user
+        return None
+
+    @staticmethod
+    def authenticate_user(db: Session, username: str, password: str):
+        user = UserService.get_user_by_username(db, username)
+        if not user or not verify_hash(password, user.password):
+            return None
+        return user
 
     @staticmethod
     def get_all_users(db: Session):
