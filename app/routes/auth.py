@@ -37,11 +37,6 @@ def regenerate_api_key(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)  # Authenticate the user
 ):
-    new_api_key = UserService.generate_api_key()
-    hashed_api_key = get_hash(new_api_key)
-    current_user.hashed_api_key = hashed_api_key
-    db.commit()
-    db.refresh(current_user)
     return {
-        "api_key": new_api_key
+        "api_key": UserService.regenerate_api_key(db, current_user)
     }
