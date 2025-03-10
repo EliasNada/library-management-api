@@ -1,3 +1,3 @@
 from .book import Book
-from .user import User
 from .borrowing_history import BorrowingHistory
+from .user import User

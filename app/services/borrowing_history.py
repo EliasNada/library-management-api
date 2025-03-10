@@ -1,9 +1,11 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
+from app.exceptions import InvalidRequest
+from app.exceptions import NotFoundError
+from app.models.borrowing_history import BorrowingHistoryCreate
 from core.database.database import BaseRepository
 from core.database.tables.borrowing_history import BorrowingHistory
-from app.models.borrowing_history import BorrowingHistoryCreate
-from app.exceptions import NotFoundError, InvalidRequest
 
 
 class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryCreate]):
@@ -11,7 +13,6 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
         super().__init__(BorrowingHistory)
 
     def borrow_book(self, db: Session, borrowing: BorrowingHistoryCreate):
-        # Check if the book is already borrowed
         existing_borrowing = (
             db.query(self.model)
             .filter(
@@ -47,6 +48,10 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
             db.commit()
         except Exception as e:
             db.rollback()
-            raise InvalidRequest('Failed to return book')
+            raise InvalidRequest('Failed to return book: ' + str(e).lower())
         db.refresh(db_borrowing)
         return db_borrowing
+
+    @staticmethod
+    def get_borrowing_history(db: Session, user_id: int):
+        return db.query(BorrowingHistory).filter(BorrowingHistory.user_id == user_id).all()

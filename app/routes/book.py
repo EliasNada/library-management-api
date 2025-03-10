@@ -1,14 +1,18 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 from app.exceptions import NotFoundError
-from core.database.database import get_db
-from app.models.book import BookCreate, BookResponse, BookSearch
+from app.models.book import BookCreate
+from app.models.book import BookResponse
+from app.models.book import BookSearch
 from app.services.book import BookService
 from core.auth.dependencies import get_current_user
+from core.database.database import get_db
 from core.database.tables import User
 from core.logging import logger
 
@@ -46,7 +50,10 @@ def read_book(
 
 
 @router.get('/books/', response_model=list[BookResponse])
-def read_all_books(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def read_all_books(
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
     try:
         return book_service.get_all(db)
     except Exception as e:

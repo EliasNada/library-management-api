@@ -1,11 +1,14 @@
-from dotenv import load_dotenv
-from app.routes import book_router, user_router, borrowing_router, auth_router
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
+from fastapi import Request
 from fastapi.responses import JSONResponse
+
 from app.exceptions import CustomHTTPException
+from app.routes import auth_router
+from app.routes import book_router
+from app.routes import borrowing_router
+from app.routes import user_router
 from core.rate_limiting import apply_rate_limiting
 
-load_dotenv()
 app = FastAPI()
 
 apply_rate_limiting(app)

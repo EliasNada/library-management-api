@@ -1,13 +1,11 @@
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    ForeignKey,
-    Date,
-    TIMESTAMP,
-    text,
-)
+from sqlalchemy import TIMESTAMP
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import Date
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import text
+
 from core.database.database import Base
 
 

@@ -1,13 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from core.auth.dependencies import get_current_user
-from core.database.database import get_db
-from core.auth.jwt import create_access_token
-from core.database.tables import User
-from app.models import RegisterResponse, UserCreate, LoginResponse, NewApiKey
+from app.models import LoginResponse
+from app.models import NewApiKey
+from app.models import RegisterResponse
+from app.models import UserCreate
 from app.services.user import UserService
+from core.auth.dependencies import get_current_user
+from core.auth.jwt import create_access_token
+from core.database.database import get_db
+from core.database.tables import User
 
 router = APIRouter()
 
@@ -38,6 +44,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 @router.post('/regenerate-api-key', response_model=NewApiKey)
 def regenerate_api_key(
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),  # Authenticate the user
+    current_user: User = Depends(get_current_user),
 ):
     return {'api_key': UserService.regenerate_api_key(db, current_user)}

@@ -1,9 +1,11 @@
 import secrets
 
 from sqlalchemy.orm import Session
-from core.database.tables import User
+
 from app.models.user import UserCreate
-from core.auth.hashing import get_hash, verify_hash
+from core.auth.hashing import get_hash
+from core.auth.hashing import verify_hash
+from core.database.tables import User
 
 
 class UserService:

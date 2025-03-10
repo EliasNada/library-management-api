@@ -1,7 +1,10 @@
+from fastapi import Depends
+from fastapi import HTTPException
+from fastapi import status
+
 from core.auth.api_key import get_current_user_api_key
 from core.auth.jwt import get_current_user_jwt
 from core.database.tables import User
-from fastapi import Depends, HTTPException, status
 
 
 def get_current_user(

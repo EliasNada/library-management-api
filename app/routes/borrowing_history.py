@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.exceptions import NotFoundError
-from core.database.database import get_db
-from app.models.borrowing_history import (
-    BorrowingHistoryCreate,
-    BorrowingHistoryResponse,
-)
+from app.models.borrowing_history import BorrowingHistoryCreate
+from app.models.borrowing_history import BorrowingHistoryResponse
 from app.services.borrowing_history import BorrowingHistoryService
 from core.auth.dependencies import get_current_user
+from core.database.database import get_db
 from core.database.tables import User
 from core.logging import logger
 

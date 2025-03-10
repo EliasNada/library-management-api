@@ -1,18 +1,22 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError, DataError
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from typing import Type, TypeVar, Generic, Optional
-from sqlalchemy.orm import Session
+from typing import Generic
+from typing import Optional
+from typing import Type
+from typing import TypeVar
+
 from pydantic import BaseModel
-from app.exceptions import (
-    NotFoundError,
-    InvalidRequest,
-    UniqueConstraintError,
-    ForeignKeyError,
-    ValueTooLongError,
-)
+from sqlalchemy import create_engine
+from sqlalchemy.exc import DataError
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
+
+from app.exceptions import ForeignKeyError
+from app.exceptions import InvalidRequest
+from app.exceptions import NotFoundError
+from app.exceptions import UniqueConstraintError
+from app.exceptions import ValueTooLongError
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 engine = create_engine(DATABASE_URL)
@@ -66,7 +70,7 @@ class BaseRepository(Generic[ModelType, CreateSchemaType]):
         db_obj = self.get(db, id)
         if not db_obj:
             raise NotFoundError()
-        for key, value in obj_in.dict().items():
+        for key, value in obj_in.model_dump().items():
             setattr(db_obj, key, value)
         try:
             db.commit()

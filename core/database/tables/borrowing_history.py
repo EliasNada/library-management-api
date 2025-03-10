@@ -1,4 +1,10 @@
-from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, Enum, text
+from sqlalchemy import TIMESTAMP
+from sqlalchemy import Column
+from sqlalchemy import Enum
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import text
+
 from core.database.database import Base
 
 
