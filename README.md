@@ -9,6 +9,7 @@ bundled with Database using Docker for easy setup.
 - ✅ CRUD for Books, Users, Borrowings
 - ✅ RESTful APIs
 - ✅ Advanced search
+- ✅ Swagger/OpenAPI documentation for interactive API testing.
 
 ## Quick Start
 
