@@ -50,10 +50,24 @@ This will cover all the setup.
 And the API will be available at:
 http://localhost:8080
 
+### Project Structure
+```aiignore
+library_app/
+├── app/                  # Application code
+├── alembic/              # Database migrations
+├── core/                 # Core functionality required by the app
+├── docs/                 # Documentation and case study
+│   ├── case_study.pdf    # case study PDF
+│   └── openapi.json      # Open API Spec document
+├── README.md             # Project overview
+├── Makefile              # contains script to run application
+└── requirements.txt      # Python dependencies
+```
+
 ### APIs
 
 All models support CRUD operations and more!  
-You can find a list of the APIs in the [openapi.json](openapi.json)
+You can find a list of the APIs in the [openapi.json](docs/openapi.json)
 (Recommend to import it into Postman to get a full list if the APIs)
 
 ### Credentials
