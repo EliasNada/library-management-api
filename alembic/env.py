@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from core.database import Base
+from core.database.database import Base
+from core.database.tables import *
 
 from alembic import context
 
@@ -46,12 +47,12 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option('sqlalchemy.url')
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        dialect_opts={'paramstyle': 'named'},
     )
 
     with context.begin_transaction():
@@ -66,22 +67,20 @@ def run_migrations_online() -> None:
 
     """
 
-    database_url = os.getenv("DATABASE_URL")
+    database_url = os.getenv('DATABASE_URL')
     if not database_url:
-        raise ValueError("DATABASE_URL environment variable is not set")
+        raise ValueError('DATABASE_URL environment variable is not set')
 
-    config.set_main_option("sqlalchemy.url", database_url)
+    config.set_main_option('sqlalchemy.url', database_url)
 
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+        prefix='sqlalchemy.',
         poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

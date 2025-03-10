@@ -5,8 +5,8 @@ from core.database.tables import User
 from app.models.user import UserCreate
 from core.auth.hashing import get_hash, verify_hash
 
-class UserService:
 
+class UserService:
     @staticmethod
     def generate_api_key():
         return secrets.token_urlsafe(32)
@@ -32,7 +32,7 @@ class UserService:
 
     @staticmethod
     def get_user(db: Session, user_id: int):
-        return db.query(User).filter(User.user_id == user_id).first()
+        return db.query(User).filter(User.id == user_id).first()
 
     @staticmethod
     def get_user_by_username(db: Session, username: str):
@@ -57,7 +57,6 @@ class UserService:
         db.refresh(user)
         return new_api_key
 
-
     @staticmethod
     def authenticate_user(db: Session, username: str, password: str):
         user = UserService.get_user_by_username(db, username)
@@ -71,9 +70,9 @@ class UserService:
 
     @staticmethod
     def update_user(db: Session, user_id: int, user: UserCreate):
-        db_user = db.query(User).filter(User.user_id == user_id).first()
+        db_user = db.query(User).filter(User.id == user_id).first()
         if db_user:
-            for key, value in user.dict().items():
+            for key, value in user.model_dump().items():
                 setattr(db_user, key, value)
             db.commit()
             db.refresh(db_user)
@@ -81,7 +80,7 @@ class UserService:
 
     @staticmethod
     def delete_user(db: Session, user_id: int):
-        db_user = db.query(User).filter(User.user_id == user_id).first()
+        db_user = db.query(User).filter(User.id == user_id).first()
         if db_user:
             db.delete(db_user)
             db.commit()

@@ -1,13 +1,14 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class BorrowingHistoryCreate(BaseModel):
     user_id: int
     book_id: int
-    status: str = "borrowed"
+
 
 class BorrowingHistoryResponse(BaseModel):
-    borrow_id: int
+    id: int
     user_id: int
     book_id: int
     borrow_date: datetime

@@ -1,51 +1,96 @@
 from fastapi import APIRouter, Depends, HTTPException
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
+from starlette.requests import Request
+
+from app.exceptions import NotFoundError
 from core.database.database import get_db
-from core.database.tables import User
-from app.models.book import BookCreate, BookResponse
+from app.models.book import BookCreate, BookResponse, BookSearch
 from app.services.book import BookService
-from core.auth.dependencies import require_librarian
+from core.auth.dependencies import get_current_user
+from core.database.tables import User
+from core.logging import logger
 
 router = APIRouter()
+book_service = BookService()
 
-@router.post("/books/", response_model=BookResponse)
+limiter = Limiter(key_func=get_remote_address)
+
+
+@router.post('/books/', response_model=BookResponse)
+@limiter.limit('5/minute')
 def create_book(
+    request: Request,
     book: BookCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_librarian)
+    current_user: User = Depends(get_current_user),
 ):
-    return BookService.create_book(db, book)
+    return book_service.create(db, book)
 
-@router.get("/books/{book_id}", response_model=BookResponse)
-def read_book(book_id: int, db: Session = Depends(get_db)):
-    db_book = BookService.get_book(db, book_id)
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return db_book
 
-@router.get("/books/", response_model=list[BookResponse])
-def read_all_books(db: Session = Depends(get_db)):
-    return BookService.get_all_books(db)
+@router.get('/books/{book_id}', response_model=BookResponse)
+def read_book(
+    book_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        db_book = book_service.get(db, book_id)
+        if not db_book:
+            raise NotFoundError()
+        return db_book
+    except Exception as e:
+        logger.error(f'Error fetching book: {e}')
+        raise HTTPException(status_code=500, detail='Failed to fetch book')
 
-@router.put("/books/{book_id}", response_model=BookResponse)
+
+@router.get('/books/', response_model=list[BookResponse])
+def read_all_books(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    try:
+        return book_service.get_all(db)
+    except Exception as e:
+        logger.error(f'Error fetching books: {e}')
+        raise HTTPException(status_code=500, detail='Failed to fetch books')
+
+
+@router.put('/books/{book_id}', response_model=BookResponse)
 def update_book(
     book_id: int,
     book: BookCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_librarian)
+    current_user: User = Depends(get_current_user),
 ):
-    db_book = BookService.update_book(db, book_id, book)
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
+    db_book = book_service.update(db, book_id, book)
+    if not db_book:
+        raise NotFoundError()
     return db_book
 
-@router.delete("/books/{book_id}", response_model=BookResponse)
+
+@router.delete('/books/{book_id}', response_model=BookResponse)
 def delete_book(
     book_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_librarian)
+    current_user: User = Depends(get_current_user),
 ):
-    db_book = BookService.delete_book(db, book_id)
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return db_book
+    try:
+        db_book = book_service.delete(db, book_id)
+        if not db_book:
+            raise NotFoundError()
+        return db_book
+    except Exception as e:
+        logger.error(f'Error deleting book: {e}')
+        raise HTTPException(status_code=500, detail='Failed to delete book')
+
+
+@router.post('/books/search', response_model=list[BookResponse])
+def search_books(
+    search: BookSearch,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        return book_service.search_books(db, search)
+    except Exception as e:
+        logger.error(f'Error searching books: {e}')
+        raise HTTPException(status_code=500, detail='Failed to search books')

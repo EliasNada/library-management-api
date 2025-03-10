@@ -1,38 +1,33 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
+
+from core.database.database import BaseRepository
 from core.database.tables import Book
-from app.models.book import BookCreate
+from app.models.book import BookCreate, BookSearch
 
-class BookService:
-    @staticmethod
-    def create_book(db: Session, book: BookCreate):
-        db_book = Book(**book.model_dump())
-        db.add(db_book)
-        db.commit()
-        db.refresh(db_book)
-        return db_book
 
-    @staticmethod
-    def get_book(db: Session, book_id: int):
-        return db.query(Book).filter(Book.book_id == book_id).first()
+class BookService(BaseRepository[Book, BookCreate]):
+    def __init__(self):
+        super().__init__(Book)
 
-    @staticmethod
-    def get_all_books(db: Session):
-        return db.query(Book).all()
-
-    @staticmethod
-    def update_book(db: Session, book_id: int, book: BookCreate):
-        db_book = db.query(Book).filter(Book.book_id == book_id).first()
-        if db_book:
-            for key, value in book.model_dump().items():
-                setattr(db_book, key, value)
-            db.commit()
-            db.refresh(db_book)
-        return db_book
-
-    @staticmethod
-    def delete_book(db: Session, book_id: int):
-        db_book = db.query(Book).filter(Book.book_id == book_id).first()
-        if db_book:
-            db.delete(db_book)
-            db.commit()
-        return db_book
+    def search_books(self, db: Session, search: BookSearch):
+        query = db.query(self.model)
+        if search.title:
+            query = query.filter(Book.title.ilike(f'%{search.title}%'))
+        if search.category:
+            query = query.filter(Book.category == search.category)
+        if search.release_date_start and search.release_date_end:
+            query = query.filter(
+                and_(
+                    Book.published_date >= search.release_date_start,
+                    Book.published_date <= search.release_date_end,
+                )
+            )
+        elif search.release_date_start:
+            query = query.filter(Book.published_date >= search.release_date_start)
+        elif search.release_date_end:
+            query = query.filter(Book.published_date <= search.release_date_end)
+        if search.availability_status is not None:
+            query = query.filter(Book.is_available == search.is_available)
+        offset = (search.page - 1) * search.limit
+        return query.offset(offset).limit(search.limit).all()
