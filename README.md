@@ -131,5 +131,8 @@ Note down your api_key as you will not be able to retrieve it again (you can sti
 
 Note: if you imported the collection mentioned in the API section into Postman, you can set the api key (`apiKey`) as an environment variable in the parent directory so that all child requests have it automatically.
 
+or you can navigate to http://localhost:8080/docs to use the interactive REST API client! (don't forget to click 'Authorize'!)
+![img.png](img.png)
+
 
 Please reach out to <eliasmnada@gmail.com> if you have any questions in inquiries.
