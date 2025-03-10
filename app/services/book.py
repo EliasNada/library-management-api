@@ -34,3 +34,14 @@ class BookService(BaseRepository[Book, BookCreate]):
             query = query.filter(Book.is_available == search.is_available)
         offset = (search.page - 1) * search.limit
         return query.offset(offset).limit(search.limit).all()
+
+    @staticmethod
+    def toggle_book_availability(db: Session, book_id: int):
+        book = db.query(Book).filter(Book.id == book_id).first()
+        print(book.is_available)
+        if book:
+            setattr(book, 'is_available', not book.is_available)
+            db.commit()
+            db.refresh(book)
+        return book
+

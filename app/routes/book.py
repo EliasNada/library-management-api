@@ -34,7 +34,7 @@ def create_book(
     return book_service.create(db, book)
 
 
-@router.get('/librarian/books/{book_id}', response_model=BookResponse)
+@router.get('/common/books/{book_id}', response_model=BookResponse)
 def read_book(
     book_id: int,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ def read_book(
         raise HTTPException(status_code=500, detail='Failed to fetch book')
 
 
-@router.get('/librarian/books/', response_model=list[BookResponse])
+@router.get('/common/books/', response_model=list[BookResponse])
 def read_all_books(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
@@ -91,7 +91,7 @@ def delete_book(
         raise HTTPException(status_code=500, detail='Failed to delete book')
 
 
-@router.post('/librarian/books/search', response_model=list[BookResponse])
+@router.post('/common/books/search', response_model=list[BookResponse])
 def search_books(
     search: BookSearch,
     db: Session = Depends(get_db),

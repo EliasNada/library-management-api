@@ -6,34 +6,6 @@
   },
   "paths": {
     "/api/librarian/books/": {
-      "get": {
-        "summary": "Read All Books",
-        "operationId": "read_all_books_api_librarian_books__get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/BookResponse"
-                  },
-                  "type": "array",
-                  "title": "Response Read All Books Api Librarian Books  Get"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          },
-          {
-            "APIKeyHeader": []
-          }
-        ]
-      },
       "post": {
         "summary": "Create Book",
         "operationId": "create_book_api_librarian_books__post",
@@ -79,10 +51,10 @@
         ]
       }
     },
-    "/api/librarian/books/{book_id}": {
+    "/api/common/books/{book_id}": {
       "get": {
         "summary": "Read Book",
-        "operationId": "read_book_api_librarian_books__book_id__get",
+        "operationId": "read_book_api_common_books__book_id__get",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -124,7 +96,39 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/common/books/": {
+      "get": {
+        "summary": "Read All Books",
+        "operationId": "read_all_books_api_common_books__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BookResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Read All Books Api Common Books  Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          },
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/librarian/books/{book_id}": {
       "put": {
         "summary": "Update Book",
         "operationId": "update_book_api_librarian_books__book_id__put",
@@ -226,10 +230,10 @@
         }
       }
     },
-    "/api/librarian/books/search": {
+    "/api/common/books/search": {
       "post": {
         "summary": "Search Books",
-        "operationId": "search_books_api_librarian_books_search_post",
+        "operationId": "search_books_api_common_books_search_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -250,7 +254,7 @@
                     "$ref": "#/components/schemas/BookResponse"
                   },
                   "type": "array",
-                  "title": "Response Search Books Api Librarian Books Search Post"
+                  "title": "Response Search Books Api Common Books Search Post"
                 }
               }
             }
@@ -751,15 +755,15 @@
         ]
       }
     },
-    "/api/auth/login": {
+    "/api/common/auth/login": {
       "post": {
         "summary": "Login",
-        "operationId": "login_api_auth_login_post",
+        "operationId": "login_api_common_auth_login_post",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/Body_login_api_auth_login_post"
+                "$ref": "#/components/schemas/Body_login_api_common_auth_login_post"
               }
             }
           },
@@ -789,10 +793,10 @@
         }
       }
     },
-    "/api/auth/register": {
+    "/api/common/auth/register": {
       "post": {
         "summary": "Register",
-        "operationId": "register_api_auth_register_post",
+        "operationId": "register_api_common_auth_register_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -827,10 +831,10 @@
         }
       }
     },
-    "/api/auth/regenerate-api-key": {
+    "/api/common/auth/regenerate-api-key": {
       "post": {
         "summary": "Regenerate Api Key",
-        "operationId": "regenerate_api_key_api_auth_regenerate_api_key_post",
+        "operationId": "regenerate_api_key_api_common_auth_regenerate_api_key_post",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -872,7 +876,7 @@
   },
   "components": {
     "schemas": {
-      "Body_login_api_auth_login_post": {
+      "Body_login_api_common_auth_login_post": {
         "properties": {
           "grant_type": {
             "anyOf": [
@@ -928,7 +932,7 @@
           "username",
           "password"
         ],
-        "title": "Body_login_api_auth_login_post"
+        "title": "Body_login_api_common_auth_login_post"
       },
       "BookCreate": {
         "properties": {
@@ -952,7 +956,8 @@
             "anyOf": [
               {
                 "type": "string",
-                "format": "date"
+                "format": "date",
+                "default": "2025-10-10"
               },
               {
                 "type": "null"

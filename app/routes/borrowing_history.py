@@ -22,7 +22,7 @@ borrowing_service = BorrowingHistoryService()
 def borrow_book(
     borrowing: BorrowingHistoryCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_librarian),
 ):
     return borrowing_service.borrow_book(db, borrowing)
 
@@ -54,7 +54,10 @@ def return_book(
     db: Session = Depends(get_db),
     current_user: User = Depends(require_librarian),
 ):
-    db_borrowing = borrowing_service.return_book(db, borrow_id)
+    borrowing = BorrowingHistoryService.get_borrowing_by_id(db, borrow_id)
+    if not borrowing:
+        raise UserBorrowingNotFound()
+    db_borrowing = borrowing_service.return_book(db, borrowing)
     if not db_borrowing:
         raise NotFoundError()
     return db_borrowing

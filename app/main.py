@@ -30,4 +30,5 @@ app.include_router(auth_router, prefix='/api')
 
 @app.get('/')
 def read_root():
-    return {'message': 'Welcome to the Library Management System!'}
+    return {'message': 'Welcome to the Library Management System! Import \'openapi.json\' file into postman or go to'
+                       '\'/docs\' to begin using the API!'}

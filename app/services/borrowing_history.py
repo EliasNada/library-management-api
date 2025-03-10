@@ -1,9 +1,13 @@
+from datetime import datetime
+from datetime import UTC
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.exceptions import InvalidRequest
 from app.exceptions import NotFoundError
 from app.models.borrowing_history import BorrowingHistoryCreate
+from app.services import BookService
 from core.database.database import BaseRepository
 from core.database.tables.borrowing_history import BorrowingHistory
 
@@ -35,18 +39,21 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
                 raise InvalidRequest('Invalid user or book ID')
             raise InvalidRequest('Failed to borrow book')
         db.refresh(db_borrowing)
+        BookService.toggle_book_availability(db, borrowing.book_id)
         return db_borrowing
 
     def return_book(self, db: Session, borrowing: BorrowingHistory):
         if borrowing.status == 'returned':
             raise InvalidRequest('Book is already returned')
         borrowing.status = 'returned'
+        borrowing.return_date = datetime.now(UTC)
         try:
             db.commit()
         except Exception as e:
             db.rollback()
             raise InvalidRequest('Failed to return book: ' + str(e).lower())
         db.refresh(borrowing)
+        BookService.toggle_book_availability(db, borrowing.book_id)
         return borrowing
 
     @staticmethod
