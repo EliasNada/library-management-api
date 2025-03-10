@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Library Management System",
+    "title": "Library Management API",
     "version": "0.1.0"
   },
   "paths": {
-    "/api/books/": {
+    "/api/librarian/books/": {
       "get": {
         "summary": "Read All Books",
-        "operationId": "read_all_books_api_books__get",
+        "operationId": "read_all_books_api_librarian_books__get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -19,7 +19,7 @@
                     "$ref": "#/components/schemas/BookResponse"
                   },
                   "type": "array",
-                  "title": "Response Read All Books Api Books  Get"
+                  "title": "Response Read All Books Api Librarian Books  Get"
                 }
               }
             }
@@ -36,7 +36,7 @@
       },
       "post": {
         "summary": "Create Book",
-        "operationId": "create_book_api_books__post",
+        "operationId": "create_book_api_librarian_books__post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -79,10 +79,10 @@
         ]
       }
     },
-    "/api/books/{book_id}": {
+    "/api/librarian/books/{book_id}": {
       "get": {
         "summary": "Read Book",
-        "operationId": "read_book_api_books__book_id__get",
+        "operationId": "read_book_api_librarian_books__book_id__get",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -127,7 +127,7 @@
       },
       "put": {
         "summary": "Update Book",
-        "operationId": "update_book_api_books__book_id__put",
+        "operationId": "update_book_api_librarian_books__book_id__put",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -182,7 +182,7 @@
       },
       "delete": {
         "summary": "Delete Book",
-        "operationId": "delete_book_api_books__book_id__delete",
+        "operationId": "delete_book_api_librarian_books__book_id__delete",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -226,10 +226,10 @@
         }
       }
     },
-    "/api/books/search": {
+    "/api/librarian/books/search": {
       "post": {
         "summary": "Search Books",
-        "operationId": "search_books_api_books_search_post",
+        "operationId": "search_books_api_librarian_books_search_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -250,7 +250,7 @@
                     "$ref": "#/components/schemas/BookResponse"
                   },
                   "type": "array",
-                  "title": "Response Search Books Api Books Search Post"
+                  "title": "Response Search Books Api Librarian Books Search Post"
                 }
               }
             }
@@ -276,10 +276,10 @@
         ]
       }
     },
-    "/api/users/": {
+    "/api/librarian/users/": {
       "get": {
         "summary": "Read All Users",
-        "operationId": "read_all_users_api_users__get",
+        "operationId": "read_all_users_api_librarian_users__get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -290,7 +290,7 @@
                     "$ref": "#/components/schemas/UserResponse"
                   },
                   "type": "array",
-                  "title": "Response Read All Users Api Users  Get"
+                  "title": "Response Read All Users Api Librarian Users  Get"
                 }
               }
             }
@@ -299,7 +299,7 @@
       },
       "post": {
         "summary": "Create User",
-        "operationId": "create_user_api_users__post",
+        "operationId": "create_user_api_librarian_users__post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -334,10 +334,10 @@
         }
       }
     },
-    "/api/users/{user_id}": {
+    "/api/librarian/users/{user_id}": {
       "get": {
         "summary": "Read User",
-        "operationId": "read_user_api_users__user_id__get",
+        "operationId": "read_user_api_librarian_users__user_id__get",
         "parameters": [
           {
             "name": "user_id",
@@ -374,7 +374,7 @@
       },
       "put": {
         "summary": "Update User",
-        "operationId": "update_user_api_users__user_id__put",
+        "operationId": "update_user_api_librarian_users__user_id__put",
         "parameters": [
           {
             "name": "user_id",
@@ -421,7 +421,7 @@
       },
       "delete": {
         "summary": "Delete User",
-        "operationId": "delete_user_api_users__user_id__delete",
+        "operationId": "delete_user_api_librarian_users__user_id__delete",
         "parameters": [
           {
             "name": "user_id",
@@ -457,10 +457,10 @@
         }
       }
     },
-    "/api/me": {
+    "/api/user/me": {
       "get": {
         "summary": "Get My User",
-        "operationId": "get_my_user_api_me_get",
+        "operationId": "get_my_user_api_user_me_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -483,10 +483,10 @@
         ]
       }
     },
-    "/api/borrow/": {
+    "/api/librarian/borrowing/borrow/": {
       "post": {
         "summary": "Borrow Book",
-        "operationId": "borrow_book_api_borrow__post",
+        "operationId": "borrow_book_api_librarian_borrowing_borrow__post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -529,10 +529,10 @@
         ]
       }
     },
-    "/api/me/borrow/{book_id}": {
+    "/api/user/borrow/{book_id}": {
       "post": {
         "summary": "I Borrow A Book",
-        "operationId": "i_borrow_a_book_api_me_borrow__book_id__post",
+        "operationId": "i_borrow_a_book_api_user_borrow__book_id__post",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -576,10 +576,10 @@
         }
       }
     },
-    "/api/me/return/{borrow_id}": {
+    "/api/user/return/{borrow_id}": {
       "post": {
         "summary": "I Return A Book",
-        "operationId": "i_return_a_book_api_me_return__borrow_id__post",
+        "operationId": "i_return_a_book_api_user_return__borrow_id__post",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -623,10 +623,10 @@
         }
       }
     },
-    "/api/return/{borrow_id}": {
+    "/api/librarian/borrowing/return/{borrow_id}": {
       "put": {
         "summary": "Return Book",
-        "operationId": "return_book_api_return__borrow_id__put",
+        "operationId": "return_book_api_librarian_borrowing_return__borrow_id__put",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -670,10 +670,10 @@
         }
       }
     },
-    "/api/history/{user_id}": {
+    "/api/librarian/borrowing/history/{user_id}": {
       "get": {
         "summary": "Get Borrowing History",
-        "operationId": "get_borrowing_history_api_history__user_id__get",
+        "operationId": "get_borrowing_history_api_librarian_borrowing_history__user_id__get",
         "security": [
           {
             "OAuth2PasswordBearer": []
@@ -703,7 +703,7 @@
                   "items": {
                     "$ref": "#/components/schemas/BorrowingHistoryResponse"
                   },
-                  "title": "Response Get Borrowing History Api History  User Id  Get"
+                  "title": "Response Get Borrowing History Api Librarian Borrowing History  User Id  Get"
                 }
               }
             }
@@ -721,10 +721,10 @@
         }
       }
     },
-    "/api/me/history": {
+    "/api/user/history": {
       "get": {
         "summary": "Get My Borrowing History",
-        "operationId": "get_my_borrowing_history_api_me_history_get",
+        "operationId": "get_my_borrowing_history_api_user_history_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -735,7 +735,7 @@
                     "$ref": "#/components/schemas/BorrowingHistoryResponse"
                   },
                   "type": "array",
-                  "title": "Response Get My Borrowing History Api Me History Get"
+                  "title": "Response Get My Borrowing History Api User History Get"
                 }
               }
             }
@@ -751,15 +751,15 @@
         ]
       }
     },
-    "/api/login": {
+    "/api/auth/login": {
       "post": {
         "summary": "Login",
-        "operationId": "login_api_login_post",
+        "operationId": "login_api_auth_login_post",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/Body_login_api_login_post"
+                "$ref": "#/components/schemas/Body_login_api_auth_login_post"
               }
             }
           },
@@ -789,10 +789,10 @@
         }
       }
     },
-    "/api/register": {
+    "/api/auth/register": {
       "post": {
         "summary": "Register",
-        "operationId": "register_api_register_post",
+        "operationId": "register_api_auth_register_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -827,10 +827,10 @@
         }
       }
     },
-    "/api/regenerate-api-key": {
+    "/api/auth/regenerate-api-key": {
       "post": {
         "summary": "Regenerate Api Key",
-        "operationId": "regenerate_api_key_api_regenerate_api_key_post",
+        "operationId": "regenerate_api_key_api_auth_regenerate_api_key_post",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -872,7 +872,7 @@
   },
   "components": {
     "schemas": {
-      "Body_login_api_login_post": {
+      "Body_login_api_auth_login_post": {
         "properties": {
           "grant_type": {
             "anyOf": [
@@ -928,7 +928,7 @@
           "username",
           "password"
         ],
-        "title": "Body_login_api_login_post"
+        "title": "Body_login_api_auth_login_post"
       },
       "BookCreate": {
         "properties": {

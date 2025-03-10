@@ -18,7 +18,7 @@ from core.database.tables import User
 router = APIRouter()
 
 
-@router.post('/login', response_model=LoginResponse)
+@router.post('/auth/login', response_model=LoginResponse)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = UserService.authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -31,7 +31,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     return {'access_token': access_token, 'token_type': 'bearer'}
 
 
-@router.post('/register', response_model=RegisterResponse)
+@router.post('/auth/register', response_model=RegisterResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = UserService.get_user_by_username(db, user.username)
     if db_user:
@@ -41,7 +41,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return {'access_token': access_token, 'token_type': 'bearer', 'api_key': api_key}
 
 
-@router.post('/regenerate-api-key', response_model=NewApiKey)
+@router.post('/auth/regenerate-api-key', response_model=NewApiKey)
 def regenerate_api_key(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

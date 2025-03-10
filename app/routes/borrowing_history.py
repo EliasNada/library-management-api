@@ -18,7 +18,7 @@ router = APIRouter()
 borrowing_service = BorrowingHistoryService()
 
 
-@router.post('/borrow/', response_model=BorrowingHistoryResponse)
+@router.post('/librarian/borrowing/borrow/', response_model=BorrowingHistoryResponse)
 def borrow_book(
     borrowing: BorrowingHistoryCreate,
     db: Session = Depends(get_db),
@@ -27,7 +27,7 @@ def borrow_book(
     return borrowing_service.borrow_book(db, borrowing)
 
 
-@router.post('/me/borrow/{book_id}', response_model=BorrowingHistoryResponse)
+@router.post('/user/borrow/{book_id}', response_model=BorrowingHistoryResponse)
 def i_borrow_a_book(
     book_id: int,
     db: Session = Depends(get_db),
@@ -37,7 +37,7 @@ def i_borrow_a_book(
     return borrowing_service.borrow_book(db, borrowing)
 
 
-@router.post('/me/return/{borrow_id}', response_model=BorrowingHistoryResponse)
+@router.post('/user/return/{borrow_id}', response_model=BorrowingHistoryResponse)
 def i_return_a_book(
     borrow_id: int,
     db: Session = Depends(get_db),
@@ -48,7 +48,7 @@ def i_return_a_book(
         raise UserBorrowingNotFound()
     return borrowing_service.return_book(db, borrowing)
 
-@router.put('/return/{borrow_id}', response_model=BorrowingHistoryResponse)
+@router.put('/librarian/borrowing/return/{borrow_id}', response_model=BorrowingHistoryResponse)
 def return_book(
     borrow_id: int,
     db: Session = Depends(get_db),
@@ -60,7 +60,7 @@ def return_book(
     return db_borrowing
 
 
-@router.get('/history/{user_id}', response_model=list[BorrowingHistoryResponse])
+@router.get('/librarian/borrowing/history/{user_id}', response_model=list[BorrowingHistoryResponse])
 def get_borrowing_history(
     user_id: int,
     db: Session = Depends(get_db),
@@ -73,7 +73,7 @@ def get_borrowing_history(
         raise HTTPException(status_code=500, detail='Failed to fetch borrowing history')
 
 
-@router.get('/me/history', response_model=list[BorrowingHistoryResponse])
+@router.get('/user/history', response_model=list[BorrowingHistoryResponse])
 def get_my_borrowing_history(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

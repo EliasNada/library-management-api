@@ -23,7 +23,7 @@ book_service = BookService()
 limiter = Limiter(key_func=get_remote_address)
 
 
-@router.post('/books/', response_model=BookResponse)
+@router.post('/librarian/books/', response_model=BookResponse)
 @limiter.limit('5/minute')
 def create_book(
     request: Request,
@@ -34,7 +34,7 @@ def create_book(
     return book_service.create(db, book)
 
 
-@router.get('/books/{book_id}', response_model=BookResponse)
+@router.get('/librarian/books/{book_id}', response_model=BookResponse)
 def read_book(
     book_id: int,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ def read_book(
         raise HTTPException(status_code=500, detail='Failed to fetch book')
 
 
-@router.get('/books/', response_model=list[BookResponse])
+@router.get('/librarian/books/', response_model=list[BookResponse])
 def read_all_books(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
@@ -62,7 +62,7 @@ def read_all_books(
         raise HTTPException(status_code=500, detail='Failed to fetch books')
 
 
-@router.put('/books/{book_id}', response_model=BookResponse)
+@router.put('/librarian/books/{book_id}', response_model=BookResponse)
 def update_book(
     book_id: int,
     book: BookUpdate,
@@ -75,7 +75,7 @@ def update_book(
     return db_book
 
 
-@router.delete('/books/{book_id}', response_model=BookResponse)
+@router.delete('/librarian/books/{book_id}', response_model=BookResponse)
 def delete_book(
     book_id: int,
     db: Session = Depends(get_db),
@@ -91,7 +91,7 @@ def delete_book(
         raise HTTPException(status_code=500, detail='Failed to delete book')
 
 
-@router.post('/books/search', response_model=list[BookResponse])
+@router.post('/librarian/books/search', response_model=list[BookResponse])
 def search_books(
     search: BookSearch,
     db: Session = Depends(get_db),

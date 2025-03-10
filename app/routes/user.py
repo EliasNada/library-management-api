@@ -14,13 +14,13 @@ from core.database.tables import User
 router = APIRouter()
 
 
-@router.post('/users/', response_model=UserResponse)
+@router.post('/librarian/users/', response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user, api_key = UserService.create_user(db, user)
     return db_user
 
 
-@router.get('/users/{user_id}', response_model=UserResponse)
+@router.get('/librarian/users/{user_id}', response_model=UserResponse)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = UserService.get_user(db, user_id)
     if db_user is None:
@@ -28,12 +28,12 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.get('/users/', response_model=list[UserResponse])
+@router.get('/librarian/users/', response_model=list[UserResponse])
 def read_all_users(db: Session = Depends(get_db)):
     return UserService.get_all_users(db)
 
 
-@router.get('/me', response_model=UserResponse)
+@router.get('/user/me', response_model=UserResponse)
 def get_my_user(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
@@ -41,7 +41,7 @@ def get_my_user(
     return current_user
 
 
-@router.put('/users/{user_id}', response_model=UserResponse)
+@router.put('/librarian/users/{user_id}', response_model=UserResponse)
 def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     db_user = UserService.update_user(db, user_id, user)
     if db_user is None:
@@ -49,7 +49,7 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.delete('/users/{user_id}', response_model=UserResponse)
+@router.delete('/librarian/users/{user_id}', response_model=UserResponse)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = UserService.delete_user(db, user_id)
     if db_user is None:
