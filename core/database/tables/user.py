@@ -1,3 +1,4 @@
+from sqlalchemy import Index
 from sqlalchemy import TIMESTAMP
 from sqlalchemy import Column
 from sqlalchemy import Enum
@@ -23,3 +24,6 @@ class User(Base):
         server_default=text('CURRENT_TIMESTAMP'),
         onupdate=text('CURRENT_TIMESTAMP'),
     )
+
+Index('role_index', User.role)
+Index('api_key_prefix_index', User.api_key_prefix)

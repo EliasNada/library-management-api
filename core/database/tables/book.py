@@ -1,3 +1,4 @@
+from sqlalchemy import Index
 from sqlalchemy import TIMESTAMP
 from sqlalchemy import Boolean
 from sqlalchemy import Column
@@ -24,3 +25,5 @@ class Book(Base):
         server_default=text('CURRENT_TIMESTAMP'),
         onupdate=text('CURRENT_TIMESTAMP'),
     )
+
+Index('is_available_index', Book.is_available)
