@@ -71,7 +71,8 @@ class BaseRepository(Generic[ModelType, CreateSchemaType]):
         if not db_obj:
             raise NotFoundError()
         for key, value in obj_in.model_dump().items():
-            setattr(db_obj, key, value)
+            if value:
+                setattr(db_obj, key, value)
         try:
             db.commit()
         except IntegrityError as e:

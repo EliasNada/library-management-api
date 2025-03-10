@@ -51,6 +51,14 @@ class BookBorrowingNotAvailable(CustomHTTPException):
             detail='Book is not available for borrowing',
         )
 
+class UserBorrowingNotFound(CustomHTTPException):
+    def __init__(self):
+        logger.error(f'User is not borrowing this book')
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='User is not borrowing this book',
+        )
+
 
 class CustomHTTPException(HTTPException):
     def __init__(self, status_code: int, detail: str):

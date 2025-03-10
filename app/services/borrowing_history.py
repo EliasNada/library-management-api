@@ -37,21 +37,22 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
         db.refresh(db_borrowing)
         return db_borrowing
 
-    def return_book(self, db: Session, borrow_id: int):
-        db_borrowing = self.get(db, borrow_id)
-        if not db_borrowing:
-            raise NotFoundError()
-        if db_borrowing.status == 'returned':
+    def return_book(self, db: Session, borrowing: BorrowingHistory):
+        if borrowing.status == 'returned':
             raise InvalidRequest('Book is already returned')
-        db_borrowing.status = 'returned'
+        borrowing.status = 'returned'
         try:
             db.commit()
         except Exception as e:
             db.rollback()
             raise InvalidRequest('Failed to return book: ' + str(e).lower())
-        db.refresh(db_borrowing)
-        return db_borrowing
+        db.refresh(borrowing)
+        return borrowing
 
     @staticmethod
     def get_borrowing_history(db: Session, user_id: int):
         return db.query(BorrowingHistory).filter(BorrowingHistory.user_id == user_id).all()
+
+    @staticmethod
+    def get_borrowing_by_id(db: Session, borrowing_id: int):
+        return db.query(BorrowingHistory).filter(BorrowingHistory.id == borrowing_id).first()

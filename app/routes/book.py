@@ -8,6 +8,7 @@ from starlette.requests import Request
 
 from app.exceptions import NotFoundError
 from app.models.book import BookCreate
+from app.models.book import BookUpdate
 from app.models.book import BookResponse
 from app.models.book import BookSearch
 from app.services.book import BookService
@@ -64,7 +65,7 @@ def read_all_books(
 @router.put('/books/{book_id}', response_model=BookResponse)
 def update_book(
     book_id: int,
-    book: BookCreate,
+    book: BookUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

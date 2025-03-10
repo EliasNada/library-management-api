@@ -12,6 +12,14 @@ class BookCreate(BaseModel):
     published_date: date | None = None
 
 
+class BookUpdate(BaseModel):
+    title: Optional[str] = None
+    author: Optional[str] = None
+    isbn: Optional[str] = None
+    category: Optional[str] = None
+    published_date: date | None = None
+
+
 class BookResponse(BaseModel):
     id: int
     title: str
@@ -27,6 +35,7 @@ class BookResponse(BaseModel):
 
 class BookSearch(BaseModel):
     title: Optional[str] = None
+    author: Optional[str] = None
     category: Optional[str] = None
     release_date_start: Optional[date] = None
     release_date_end: Optional[date] = None

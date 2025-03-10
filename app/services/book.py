@@ -15,6 +15,8 @@ class BookService(BaseRepository[Book, BookCreate]):
         query = db.query(self.model)
         if search.title:
             query = query.filter(Book.title.ilike(f'%{search.title}%'))
+        if search.author:
+            query = query.filter(Book.author.ilike(f'%{search.author}%'))
         if search.category:
             query = query.filter(Book.category == search.category)
         if search.release_date_start and search.release_date_end:
@@ -28,7 +30,7 @@ class BookService(BaseRepository[Book, BookCreate]):
             query = query.filter(Book.published_date >= search.release_date_start)
         elif search.release_date_end:
             query = query.filter(Book.published_date <= search.release_date_end)
-        if search.availability_status is not None:
+        if search.is_available is not None:
             query = query.filter(Book.is_available == search.is_available)
         offset = (search.page - 1) * search.limit
         return query.offset(offset).limit(search.limit).all()

@@ -2,7 +2,9 @@ import secrets
 
 from sqlalchemy.orm import Session
 
+from app.exceptions import InvalidRequest
 from app.models.user import UserCreate
+from app.models.user import UserUpdate
 from core.auth.hashing import get_hash
 from core.auth.hashing import verify_hash
 from core.database.tables import User
@@ -28,7 +30,11 @@ class UserService:
             api_key_prefix=api_key_prefix,
         )
         db.add(db_user)
-        db.commit()
+        try:
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise InvalidRequest(str(e))
         db.refresh(db_user)
         return db_user, api_key
 
@@ -71,11 +77,12 @@ class UserService:
         return db.query(User).all()
 
     @staticmethod
-    def update_user(db: Session, user_id: int, user: UserCreate):
+    def update_user(db: Session, user_id: int, user: UserUpdate):
         db_user = db.query(User).filter(User.id == user_id).first()
         if db_user:
             for key, value in user.model_dump().items():
-                setattr(db_user, key, value)
+                if value:
+                    setattr(db_user, key, value)
             db.commit()
             db.refresh(db_user)
         return db_user
