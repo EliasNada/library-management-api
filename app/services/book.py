@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
@@ -11,8 +13,15 @@ class BookService(BaseRepository[Book, BookCreate]):
     def __init__(self):
         super().__init__(Book)
 
-    def search_books(self, db: Session, search: BookSearch):
+    def search_books(self, db: Session, search: BookSearch) -> List[Book]:
+        """
+        Search books by various filters
+        :param db:
+        :param search:
+        :return List[Book]:
+        """
         query = db.query(self.model)
+        # apply any provided filters
         if search.title:
             query = query.filter(Book.title.ilike(f'%{search.title}%'))
         if search.author:
@@ -36,7 +45,13 @@ class BookService(BaseRepository[Book, BookCreate]):
         return query.offset(offset).limit(search.limit).all()
 
     @staticmethod
-    def toggle_book_availability(db: Session, book_id: int):
+    def toggle_book_availability(db: Session, book_id: int) -> Book:
+        """
+        Toggle book availability, changes to true once book is returned, and to false when it's borrowed
+        :param db:
+        :param book_id:
+        :return Book:
+        """
         book = db.query(Book).filter(Book.id == book_id).first()
         print(book.is_available)
         if book:

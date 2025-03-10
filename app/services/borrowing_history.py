@@ -1,5 +1,6 @@
 from datetime import datetime
 from datetime import UTC
+from typing import List
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -16,7 +17,13 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
     def __init__(self):
         super().__init__(BorrowingHistory)
 
-    def borrow_book(self, db: Session, borrowing: BorrowingHistoryCreate):
+    def borrow_book(self, db: Session, borrowing: BorrowingHistoryCreate) -> BorrowingHistory:
+        """
+        assigns a book to a user and marks the book as unavailable
+        :param db:
+        :param borrowing:
+        :return:
+        """
         existing_borrowing = (
             db.query(self.model)
             .filter(
@@ -42,7 +49,13 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
         BookService.toggle_book_availability(db, borrowing.book_id)
         return db_borrowing
 
-    def return_book(self, db: Session, borrowing: BorrowingHistory):
+    def return_book(self, db: Session, borrowing: BorrowingHistory) -> BorrowingHistory:
+        """
+        Marks the book as returned and available
+        :param db:
+        :param borrowing:
+        :return BorrowingHistory:
+        """
         if borrowing.status == 'returned':
             raise InvalidRequest('Book is already returned')
         borrowing.status = 'returned'
@@ -57,9 +70,21 @@ class BorrowingHistoryService(BaseRepository[BorrowingHistory, BorrowingHistoryC
         return borrowing
 
     @staticmethod
-    def get_borrowing_history(db: Session, user_id: int):
+    def get_borrowing_history(db: Session, user_id: int) -> List[BorrowingHistory]:
+        """
+        Gets user borrowing history
+        :param db:
+        :param user_id:
+        :return:
+        """
         return db.query(BorrowingHistory).filter(BorrowingHistory.user_id == user_id).all()
 
     @staticmethod
-    def get_borrowing_by_id(db: Session, borrowing_id: int):
+    def get_borrowing_by_id(db: Session, borrowing_id: int) -> BorrowingHistory:
+        """
+        Gets a single borrowing by its id
+        :param db:
+        :param borrowing_id:
+        :return:
+        """
         return db.query(BorrowingHistory).filter(BorrowingHistory.id == borrowing_id).first()
