@@ -5,11 +5,14 @@ bundled with Database using Docker for easy setup.
 
 ## Features
 
-- ✅ JWT Authentication
+- ✅ JWT/API key Authentication
+- ✅ Role Based Access Control
 - ✅ CRUD for Books, Users, Borrowings
 - ✅ RESTful APIs
 - ✅ Advanced search
 - ✅ Swagger/OpenAPI documentation for interactive API testing.
+- ✅ Rate Limiting
+- ✅ Documented code
 
 ## Quick Start
 
