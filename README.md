@@ -13,41 +13,36 @@ bundled with Database using Docker for easy setup.
 - ✅ Swagger/OpenAPI documentation for interactive API testing.
 - ✅ Rate Limiting
 - ✅ Documented code
+- 🐳 Dockerized Environment
 
 ## Quick Start
 
 ### Prerequisites
 
 - Docker
-- Python 3.13 + pipenv
-- GNU Make
+- (Optional) GNU Make (Makefile)
 - curl/httpie or postman (for testing)
 
 ### Installation
 Make sure the prerequisites are installed correctly and running.
 
-### Option one (Recommended):
+### Option one:
 
-You can then simply run the app by doing
+You can simply run the app by doing
 ```bash
-make run
+  make run
 ```
 ### Option two:
-if you have your own Postgres database that you prefer to connect to,
-please modify the [.env](.env) file with the correct connection string.
-
-You can then run the following commands to get the application running:
+if you don't want to use Makefile, you can run directly by using:
 ```bash
-pipenv --python 3.13
-pipenv install -r requirements.txt
-pipenv run alembic upgrade head
-pipenv run uvicorn app.main:app --port 8080
+  docker compose up --build -d
+  docker compose exec library alembic upgrade head  #run the db migration
 ```
 
 
 This will cover all the setup.
 
-And the API will be available at:
+And the API will be available on your machine at:
 http://localhost:8080
 
 ### Project Structure
